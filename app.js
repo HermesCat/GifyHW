@@ -1,17 +1,7 @@
 //...create a topics array........................................................
 var topics = ["cats", "pandas", "pugs", "monkeys", "ligers"];
 
-//...making new buttons from array.........................................................................
-function renderButtons() {
-    $("#buttonRow").empty();
-    for (var i = 0; i < topics.length; i++) {
-      var a = $("<button>");
-      a.addClass("animal");
-      a.attr("data-name",topics[i]);
-      a.text(topics[i]);
-      $("#buttonRow").append(a);
-    }
-  }
+
 
   //...this handles the click to add a button......................................................
   $("#add-animal").on("click", function(event) {
@@ -22,14 +12,24 @@ function renderButtons() {
     renderButtons();
   });
 
-  renderButtons();
+//...making new buttons from array.........................................................................
+function renderButtons() {
+    $("#buttonRow").empty();
+    for (var i = 0; i < topics.length; i++) {
+      var a = $("<button>");
+      a.addClass("animal");
+      a.attr("data-name", topics[i]);
+      a.text(topics[i]);
+      $("#buttonRow").append(a);
+    }
+  }
 
 //...use the buttons to search GIPHY API.......................................................
-
-$(".animal").on("click", function() {
+function displayGIFs() {
+  //..empty the display each time....
     $("#imageDisplay").empty();
     var animal = $(this).attr("data-name");
-    console.log(this);
+    console.log(animal);
 
     var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
     animal + "&api_key=TIYiADDeCV4ZlO6n3oUTGqMbl0VvM7xC&limit=10&fixed_height_small_still";
@@ -38,7 +38,7 @@ $(".animal").on("click", function() {
       url: queryURL,
       method: "GET"
     })
-      .then(function(response) {;
+      .then(function(response) {
         console.log(response);
         var results = response.data;
 //...make a for loop to append the animal images to the DOM.......................................
@@ -51,6 +51,10 @@ $(".animal").on("click", function() {
           animalDiv.append(animalImage);
           $("#imageDisplay").prepend(animalDiv);
         }
+      
       });
-  });
+    }
 
+    //...gives the buttons the animal class.............................................
+  $(document).on("click", ".animal", displayGIFs);
+  renderButtons();
